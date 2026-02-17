@@ -1,29 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: haydinog <haydinog@student.42istanbul.com.tr>  #+#  +:+       +#+    */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026-02-16 09:23:26 by haydinog          #+#    #+#             */
-/*   Updated: 2026-02-16 09:23:26 by haydinog         ###   ########.fr       */
+/*   Created: 2026-02-17 09:40:27 by haydinog          #+#    #+#             */
+/*   Updated: 2026-02-17 09:40:27 by haydinog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
+#include "get_next_line.h"
 
-#define GET_NEXT_LINE_H
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
 
-#ifndef BUFFER_SIZE
-#define BUFFER_SIZE  42
-
-#endif
-
-#include <unistd.h>
-#include <stdlib.h>
-
-char *get_next_line(int fd);
-size_t	ft_strlen(const char *s);
-char	*ft_strchr(const char *s, int c);
-
-#endif
+	i = 0;
+	while (s[i] != '\0')
+	{
+		i++;
+	}
+	return (i);
+}
+char	*ft_strchr(const char *s, int c)
+{
+	int		i;
+	if (!s)
+		return(NULL);
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == (unsigned char)c)
+			return ((char *)s + i);
+		s++;
+	}
+	if (!(unsigned char)c)
+		return ((char *)s);
+	return (NULL);
+}
