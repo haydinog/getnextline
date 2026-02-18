@@ -3,40 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haydinog <haydinog@student.42istanbul.com.tr>  #+#  +:+       +#+    */
+/*   By: haydinog <haydinog@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026-02-16 09:23:02 by haydinog          #+#    #+#             */
-/*   Updated: 2026-02-16 09:23:02 by haydinog         ###   ########.fr       */
+/*   Created: 2026/02/16 09:23:02 by haydinog          #+#    #+#             */
+/*   Updated: 2026/02/18 14:17:47 by haydinog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h>
+
 #include "get_next_line.h"
 
 static char *buffer_to_stash(char *stash, char *buffer)
 {
-	size_t	i;
-	size_t	j;
+	int		i;
+	int		j;
 	char *newstash;
+
 	i = 0;
 	j = 0;
-	
-	if(!stash || !buffer)
+	if (!buffer)
 		return (NULL);
+	if (!stash)
+	{
+		stash = ft_strdup(buffer);
+		return (stash);
+	}
 	newstash = malloc(ft_strlen(stash) + ft_strlen(buffer) + 1);
 	if (!newstash)
-		return (NULL);
-	while (stash && stash[i])
+		return (free(stash),NULL);
+	while (stash[i]) 
 	{
-		newstash[i] = stash[i];
-		i++;
-	}
-	while(buffer && buffer[j])
-	{
-		newstash[i] = buffer[j];
-		i++;
-		j++;
-	}
+		newstash[i] = stash[i++];
+	}	
+	while(buffer[j])
+	newstash[i++] = buffer[j++];
 	newstash[i] = '\0';
 	free(stash);
 	return(newstash);
@@ -44,8 +44,8 @@ static char *buffer_to_stash(char *stash, char *buffer)
 
 static char *stash_to_line(char *stash)
 {
-	size_t	i;
-	size_t	j;
+	int		i;
+	int		j;
 	char *line;
 
 	i = 0;
@@ -68,31 +68,74 @@ static char *stash_to_line(char *stash)
 	line[j] = '\0';
 	return(line);
 }
-char *get_next_line(int fd)
+static char *after_line(char *stash)
 {
-	static char *stash;
-	char		*buffer;
-	char		*line;
-	int			value;
-
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	int		i;
+	int		j;
+	char *last_stash;
+	
+	i = 0;
+	j = 0;
+	if (!stash)
 		return (NULL);
-	while (!stash || !ft_strchr(stash, '\n')) // bu while detaylı read fonksiyonu olacak
+	while (stash[i] && stash[i] != '\n')
+		i++;
+	if (stash[i] && stash[i] == '\n')
+		i++;
+		else
+			return(free(stash), NULL);
+	last_stash = malloc(ft_strlen(stash + i) + 1);
+	if (!last_stash)
+		return (free(stash),NULL);
+	while(stash[i])
+		last_stash[j++] = stash[i++];
+	last_stash[j] = '\0';
+	free(stash);
+	return(last_stash);
+}
+
+static char *read_buffer(int fd, char *stash)
+{
+	char *buffer;
+	int value;
+	
+	while (!stash || !ft_strchr(stash, '\n'))
 	{
+		buffer = malloc(BUFFER_SIZE + 1);
+		if (!buffer)
+			return(NULL);
 		value = read(fd, buffer, BUFFER_SIZE);
-		if (value <= 0)
+		if (value < 0)
 		{
 			free(buffer);
+			free(stash);
 			return(NULL);
 		}
 		if (value == 0)
+		{
+			free(buffer);
 			break;
-		buffer[value] = '\0';	
+		}
+		buffer[value] = '\0';
+		stash = buffer_to_stash(stash, buffer);
+		free(buffer);
 	}
-	stash = buffer_to_stash(stash, buffer);
-		if(!stash)
-			return (NULL);
+	return(stash);
+}
+char *get_next_line(int fd)
+{
+	static char *stash;
+	char		*line;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	stash = read_buffer(fd, stash);
+	if(!stash)
+		return (NULL);
 	line = stash_to_line(stash);
+	if (!line)
+		return (free(stash),NULL);
+	stash = after_line(stash);
 	return(line);	
 }
 

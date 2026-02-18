@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haydinog <haydinog@student.42istanbul.com.tr>  #+#  +:+       +#+    */
+/*   By: haydinog <haydinog@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026-02-16 09:23:26 by haydinog          #+#    #+#             */
-/*   Updated: 2026-02-16 09:23:26 by haydinog         ###   ########.fr       */
+/*   Created: 2026/02/16 09:23:26 by haydinog          #+#    #+#             */
+/*   Updated: 2026/02/18 13:07:24 by haydinog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,6 @@
 char *get_next_line(int fd);
 size_t	ft_strlen(const char *s);
 char	*ft_strchr(const char *s, int c);
+char	*ft_strdup(const char *s);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haydinog <haydinog@student.42istanbul.com.tr>  #+#  +:+       +#+    */
+/*   By: haydinog <haydinog@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026-02-17 09:40:27 by haydinog          #+#    #+#             */
-/*   Updated: 2026-02-17 09:40:27 by haydinog         ###   ########.fr       */
+/*   Created: 2026/02/17 09:40:27 by haydinog          #+#    #+#             */
+/*   Updated: 2026/02/18 13:07:18 by haydinog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,23 @@ char	*ft_strchr(const char *s, int c)
 	if (!(unsigned char)c)
 		return ((char *)s);
 	return (NULL);
+}
+char	*ft_strdup(const char *s)
+{
+	char	*dest;
+	int		i;
+	int		len;
+
+	len = ft_strlen(s);
+	dest = malloc(sizeof (char ) * len + 1);
+	if (!dest)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		dest[i] = s[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
 }
