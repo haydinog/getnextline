@@ -58,3 +58,18 @@ char	*ft_strdup(const char *s)
 	dest[i] = '\0';
 	return (dest);
 }
+
+char *free_stash(char *stash)
+{
+	if(stash)
+	{
+	free(stash);
+	stash = NULL;
+	}
+	return(NULL);
+}
+char *free_buffer(char *buffer)
+{
+	free(buffer);
+	return(NULL);
+}

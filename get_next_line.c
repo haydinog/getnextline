@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
+#include <fcntl.h>
 #include "get_next_line.h"
 
 static char *buffer_to_stash(char *stash, char *buffer)
@@ -23,18 +23,16 @@ static char *buffer_to_stash(char *stash, char *buffer)
 	j = 0;
 	if (!buffer)
 		return (NULL);
-	if (!stash)
-	{
-		stash = ft_strdup(buffer);
-		return (stash);
-	}
+	if (!stash)	
+		return (stash = ft_strdup(buffer));
 	newstash = malloc(ft_strlen(stash) + ft_strlen(buffer) + 1);
 	if (!newstash)
-		return (free(stash),NULL);
+		return (free_stash(stash));
 	while (stash[i]) 
 	{
-		newstash[i] = stash[i++];
-	}	
+		newstash[i] = stash[i];
+		i++;
+	}
 	while(buffer[j])
 	newstash[i++] = buffer[j++];
 	newstash[i] = '\0';
@@ -83,10 +81,10 @@ static char *after_line(char *stash)
 	if (stash[i] && stash[i] == '\n')
 		i++;
 		else
-			return(free(stash), NULL);
+			return(free_stash(stash));
 	last_stash = malloc(ft_strlen(stash + i) + 1);
 	if (!last_stash)
-		return (free(stash),NULL);
+		return (free_stash(stash));
 	while(stash[i])
 		last_stash[j++] = stash[i++];
 	last_stash[j] = '\0';
@@ -103,14 +101,10 @@ static char *read_buffer(int fd, char *stash)
 	{
 		buffer = malloc(BUFFER_SIZE + 1);
 		if (!buffer)
-			return(NULL);
+			return(free_buffer(buffer));
 		value = read(fd, buffer, BUFFER_SIZE);
 		if (value < 0)
-		{
-			free(buffer);
-			free(stash);
-			return(NULL);
-		}
+			return(free_buffer(buffer));
 		if (value == 0)
 		{
 			free(buffer);
@@ -131,11 +125,26 @@ char *get_next_line(int fd)
 		return (NULL);
 	stash = read_buffer(fd, stash);
 	if(!stash)
-		return (NULL);
+		return(free_stash(stash));
 	line = stash_to_line(stash);
 	if (!line)
-		return (free(stash),NULL);
+		return(free_stash(stash));
 	stash = after_line(stash);
 	return(line);	
 }
+// #include <stdio.h>
+// int main()
+// {
+// 	int fd;
+// 	fd = open("deneme.txt", O_RDWR);
+// 	char *str;
 
+// 	while((str = get_next_line(fd)) != NULL)
+// 	{
+// 		printf("%s\n", str);
+// 		free(str);
+// 	}
+		
+	
+// 	close(fd);
+// }
