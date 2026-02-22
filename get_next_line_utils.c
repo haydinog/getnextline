@@ -6,7 +6,7 @@
 /*   By: haydinog <haydinog@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 09:40:27 by haydinog          #+#    #+#             */
-/*   Updated: 2026/02/18 13:07:18 by haydinog         ###   ########.fr       */
+/*   Updated: 2026/02/22 13:10:23 by haydinog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*ft_strchr(const char *s, int c)
 	{
 		if (s[i] == (unsigned char)c)
 			return ((char *)s + i);
-		s++;
+		i++;
 	}
 	if (!(unsigned char)c)
 		return ((char *)s);

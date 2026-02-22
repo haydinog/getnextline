@@ -6,7 +6,7 @@
 /*   By: haydinog <haydinog@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 09:23:02 by haydinog          #+#    #+#             */
-/*   Updated: 2026/02/18 14:17:47 by haydinog         ###   ########.fr       */
+/*   Updated: 2026/02/22 20:15:07 by haydinog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ static char *stash_to_line(char *stash)
 	line = malloc(i + 1);
 	if (!line)
 		return (NULL);
-
 	while (j < i)
 	{
 		line[j] = stash[j];
@@ -103,8 +102,11 @@ static char *read_buffer(int fd, char *stash)
 		if (!buffer)
 			return(free_buffer(buffer));
 		value = read(fd, buffer, BUFFER_SIZE);
-		if (value < 0)
-			return(free_buffer(buffer));
+		if (value == - 1)
+		{
+			free(buffer);
+			return(free_stash(stash));
+		}
 		if (value == 0)
 		{
 			free(buffer);
@@ -124,11 +126,19 @@ char *get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	stash = read_buffer(fd, stash);
-	if(!stash)
-		return(free_stash(stash));
+	if(!stash || !stash[0])
+	{
+		free(stash);
+		stash = NULL;
+		return (NULL);
+	}
 	line = stash_to_line(stash);
 	if (!line)
-		return(free_stash(stash));
+	{
+		free_stash(stash);
+		stash = NULL;
+		return(NULL);
+	}
 	stash = after_line(stash);
 	return(line);	
 }
